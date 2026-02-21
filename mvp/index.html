@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adventures Of - Personalized Storybooks Where Your Child Is The Hero</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; }
+        .hero { text-align: center; padding: 40px 20px; }
+        .hero h1 { font-size: 2.5rem; color: #92400e; margin-bottom: 10px; }
+        .hero p { font-size: 1.2rem; color: #78350f; margin-bottom: 20px; }
+        .emoji { font-size: 4rem; display: block; margin-bottom: 20px; }
+        .form-card { background: white; border-radius: 20px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-weight: 600; color: #444; margin-bottom: 8px; }
+        input, select { width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 16px; transition: border-color 0.3s; }
+        input:focus, select:focus { outline: none; border-color: #f59e0b; }
+        .interests-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .interest-btn { padding: 10px; border: 2px solid #e5e7eb; border-radius: 10px; background: white; cursor: pointer; transition: all 0.3s; text-align: center; font-size: 14px; }
+        .interest-btn:hover { border-color: #f59e0b; }
+        .interest-btn.selected { background: #fef3c7; border-color: #f59e0b; }
+        .photo-upload { border: 2px dashed #d1d5db; border-radius: 10px; padding: 30px; text-align: center; cursor: pointer; transition: all 0.3s; }
+        .photo-upload:hover { border-color: #f59e0b; background: #fef3c7; }
+        .photo-preview { width: 100px; height: 100px; border-radius: 10px; object-fit: cover; margin: 10px; }
+        .btn { width: 100%; padding: 16px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; border: none; border-radius: 12px; font-size: 18px; font-weight: 700; cursor: pointer; transition: transform 0.2s; }
+        .btn:hover { transform: translateY(-2px); }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .price-tag { text-align: center; font-size: 1.5rem; color: #92400e; margin: 20px 0; }
+        .price-tag span { font-size: 2.5rem; font-weight: 800; }
+        .guarantee { text-align: center; color: #6b7280; font-size: 14px; margin-top: 15px; }
+        .loading { display: none; text-align: center; padding: 40px; }
+        .spinner { width: 50px; height: 50px; border: 4px solid #e5e7eb; border-top-color: #f59e0b; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <span class="emoji">📚</span>
+            <h1>Adventures Of</h1>
+            <p>Where YOUR child becomes the hero of their own story</p>
+        </div>
+        
+        <div class="form-card">
+            <form id="bookForm">
+                <div class="form-group">
+                    <label>Child's Name</label>
+                    <input type="text" id="childName" placeholder="Enter your child's name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Child's Age</label>
+                    <select id="childAge" required>
+                        <option value="">Select age</option>
+                        <option value="3">3 years old</option>
+                        <option value="4">4 years old</option>
+                        <option value="5">5 years old</option>
+                        <option value="6">6 years old</option>
+                        <option value="7">7 years old</option>
+                        <option value="8">8 years old</option>
+                        <option value="9">9 years old</option>
+                        <option value="10">10 years old</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Top 3 Interests</label>
+                    <div class="interests-grid" id="interestsGrid">
+                        <button type="button" class="interest-btn" data-value="dinosaurs">🦕 Dinosaurs</button>
+                        <button type="button" class="interest-btn" data-value="space">🚀 Space</button>
+                        <button type="button" class="interest-btn" data-value="animals">🐾 Animals</button>
+                        <button type="button" class="interest-btn" data-value="sports">⚽ Sports</button>
+                        <button type="button" class="interest-btn" data-value="magic">✨ Magic</button>
+                        <button type="button" class="interest-btn" data-value="robots">🤖 Robots</button>
+                        <button type="button" class="interest-btn" data-value="princesses">👸 Princesses</button>
+                        <button type="button" class="interest-btn" data-value="pirates">🏴‍☠️ Pirates</button>
+                        <button type="button" class="interest-btn" data-value="superheroes">🦸 Superheroes</button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Favorite Thing (food, toy, animal, or color)</label>
+                    <input type="text" id="favoriteThing" placeholder="e.g., pizza, teddy bear, kitten, blue">
+                </div>
+                
+                <div class="form-group">
+                    <label>One Fear to Avoid in the Story</label>
+                    <input type="text" id="fearToAvoid" placeholder="e.g., darkness, thunder, dogs">
+                </div>
+                
+                <div class="form-group">
+                    <label>Reading Level</label>
+                    <select id="readingLevel" required>
+                        <option value="simple">Simple - Short sentences, basic words</option>
+                        <option value="medium">Medium - Paragraphs, some challenging words</option>
+                        <option value="advanced">Advanced - Chapter book style, rich vocabulary</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Upload a Photo of Your Child</label>
+                    <div class="photo-upload" id="photoUpload">
+                        <p>Click to upload or drag and drop</p>
+                        <p style="font-size: 12px; color: #9ca3af;">Best: clear face, natural lighting</p>
+                        <input type="file" id="photoInput" accept="image/*" style="display: none;">
+                    </div>
+                    <div id="photoPreview"></div>
+                </div>
+                
+                <div class="price-tag">
+                    Digital Book: <span>$12</span>
+                </div>
+                
+                <button type="submit" class="btn" id="submitBtn">Create My Story - $12</button>
+                <p class="guarantee">🔒 Secure checkout. Download instantly.</p>
+            </form>
+            
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <h3>Creating your story...</h3>
+                <p id="loadingStatus">Generating illustrations</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Interest selection
+        const interestBtns = document.querySelectorAll('.interest-btn');
+        const selectedInterests = [];
+        
+        interestBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (selectedInterests.includes(btn.dataset.value)) {
+                    selectedInterests.splice(selectedInterests.indexOf(btn.dataset.value), 1);
+                    btn.classList.remove('selected');
+                } else if (selectedInterests.length < 3) {
+                    selectedInterests.push(btn.dataset.value);
+                    btn.classList.add('selected');
+                }
+            });
+        });
+        
+        // Photo upload
+        const photoUpload = document.getElementById('photoUpload');
+        const photoInput = document.getElementById('photoInput');
+        const photoPreview = document.getElementById('photoPreview');
+        let uploadedPhoto = null;
+        
+        photoUpload.addEventListener('click', () => photoInput.click());
+        photoInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    uploadedPhoto = e.target.result;
+                    photoPreview.innerHTML = `<img src="${e.target.result}" class="photo-preview">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // Form submit
+        document.getElementById('bookForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (selectedInterests.length === 0) {
+                alert('Please select at least 1 interest');
+                return;
+            }
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const form = document.getElementById('bookForm');
+            const loading = document.getElementById('loading');
+            
+            submitBtn.disabled = true;
+            form.style.display = 'none';
+            loading.style.display = 'block';
+            
+            const bookData = {
+                childName: document.getElementById('childName').value,
+                childAge: document.getElementById('childAge').value,
+                interests: selectedInterests,
+                favoriteThing: document.getElementById('favoriteThing').value,
+                fearToAvoid: document.getElementById('fearToAvoid').value,
+                readingLevel: document.getElementById('readingLevel').value,
+                photo: uploadedPhoto
+            };
+            
+            // Call API to generate book
+            try {
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(bookData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('Book created! Download link: ' + result.downloadUrl);
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (err) {
+                alert('Error generating book: ' + err.message);
+            }
+            
+            submitBtn.disabled = false;
+            form.style.display = 'block';
+            loading.style.display = 'none';
+        });
+    </script>
+</body>
+</html>
