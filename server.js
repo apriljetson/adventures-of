@@ -240,8 +240,8 @@ app.use(express.static(path.join(__dirname)));
 // Serve output files
 app.use('/output', express.static(path.join(__dirname, 'output')));
 
-// Payment link - Replace with your actual Cash App or Stripe link
-const PAYMENT_LINK = 'https://cash.app/$AprilJetson'; // TODO: Update to your payment link
+// Payment link - Replace with your actual Stripe link
+const PAYMENT_LINK = 'https://buy.stripe.com/test_3cI00j1Da7sq3GF2vkdAk00';
 
 // Health check
 app.get('/api/health', (req, res) => {
