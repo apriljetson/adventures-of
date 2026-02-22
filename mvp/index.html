@@ -18,7 +18,7 @@
         input, select { width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 16px; transition: border-color 0.3s; }
         input:focus, select:focus { outline: none; border-color: #f59e0b; }
         .interests-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .interest-btn { padding: 10px; border: 2px solid #e5e7eb; border-radius: 10px; background: white; cursor: pointer; transition: all 0.3s; text-align: center; font-size: 14px; }
+        .interest-btn { padding: 10px; border: 2px solid #e5e7eb; border-radius: 10px; background: white; cursor: pointer;0.3s transition: all ; text-align: center; font-size: 14px; }
         .interest-btn:hover { border-color: #f59e0b; }
         .interest-btn.selected { background: #fef3c7; border-color: #f59e0b; }
         .photo-upload { border: 2px dashed #d1d5db; border-radius: 10px; padding: 30px; text-align: center; cursor: pointer; transition: all 0.3s; }
@@ -27,12 +27,57 @@
         .btn { width: 100%; padding: 16px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; border: none; border-radius: 12px; font-size: 18px; font-weight: 700; cursor: pointer; transition: transform 0.2s; }
         .btn:hover { transform: translateY(-2px); }
         .btn:disabled { opacity: 0.6; cursor: not-allowed; }
-        .price-tag { text-align: center; font-size: 1.5rem; color: #92400e; margin: 20px 0; }
-        .price-tag span { font-size: 2.5rem; font-weight: 800; }
-        .guarantee { text-align: center; color: #6b7280; font-size: 14px; margin-top: 15px; }
+        
+        .payment-section {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .payment-section h2 { color: #92400e; margin-bottom: 15px; }
+        .payment-btn {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 16px 32px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 20px;
+            margin: 15px 0;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+        }
+        .payment-btn:hover { background: #059669; transform: translateY(-2px); }
+        .price-display { font-size: 2.5rem; font-weight: 800; color: #92400e; }
+        
         .loading { display: none; text-align: center; padding: 40px; }
         .spinner { width: 50px; height: 50px; border: 4px solid #e5e7eb; border-top-color: #f59e0b; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px; }
         @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .success-message { 
+            display: none; 
+            background: #d1fae5; 
+            border-radius: 16px; 
+            padding: 40px; 
+            text-align: center; 
+            color: #065f46; 
+        }
+        .success-message h3 { font-size: 1.8rem; margin-bottom: 15px; }
+        .download-btn {
+            display: inline-block;
+            background: #3b82f6;
+            color: white;
+            padding: 14px 28px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 700;
+            margin-top: 15px;
+        }
+        
+        .hidden { display: none; }
+        .step { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -43,7 +88,30 @@
             <p>Where YOUR child becomes the hero of their own story</p>
         </div>
         
-        <div class="form-card">
+        <!-- Step 1: Payment -->
+        <div class="form-card step" id="stepPayment">
+            <div class="payment-section">
+                <h2>Start Your Adventure</h2>
+                <p class="price-display">$12</p>
+                <p style="color: #78350f; margin: 10px 0;">Personalized digital storybook</p>
+                
+                <!-- REPLACE WITH YOUR CASH APP TAG -->
+                <a href="https://cash.app/$AprilJetson/12" target="_blank" class="payment-btn">
+                    💚 Pay with Cash App
+                </a>
+                
+                <p style="font-size: 12px; color: #78350f; margin-top: 15px;">
+                    After paying, you'll create your story
+                </p>
+                
+                <button type="button" class="btn" onclick="startCreating()" style="margin-top: 20px; background: #6b7280;">
+                    I've Paid - Create My Story →
+                </button>
+            </div>
+        </div>
+        
+        <!-- Step 2: Create Story -->
+        <div class="form-card step hidden" id="stepCreate">
             <form id="bookForm">
                 <div class="form-group">
                     <label>Child's Name</label>
@@ -100,7 +168,7 @@
                 </div>
                 
                 <div class="form-group">
-                    <label>Upload a Photo of Your Child</label>
+                    <label>Upload a Photo of Your Child (optional)</label>
                     <div class="photo-upload" id="photoUpload">
                         <p>Click to upload or drag and drop</p>
                         <p style="font-size: 12px; color: #9ca3af;">Best: clear face, natural lighting</p>
@@ -109,23 +177,40 @@
                     <div id="photoPreview"></div>
                 </div>
                 
-                <div class="price-tag">
-                    Digital Book: <span>$12</span>
-                </div>
-                
-                <button type="submit" class="btn" id="submitBtn">Create My Story - $12</button>
-                <p class="guarantee">🔒 Secure checkout. Download instantly.</p>
+                <button type="submit" class="btn" id="submitBtn">Generate My Story</button>
+                <p class="guarantee" style="text-align: center; color: #6b7280; font-size: 14px; margin-top: 15px;">
+                    ⭐ You'll get a personalized PDF storybook
+                </p>
             </form>
             
             <div class="loading" id="loading">
                 <div class="spinner"></div>
                 <h3>Creating your story...</h3>
-                <p id="loadingStatus">Generating illustrations</p>
+                <p id="loadingStatus">This takes about 30 seconds</p>
             </div>
+        </div>
+        
+        <!-- Step 3: Success -->
+        <div class="success-message" id="stepSuccess">
+            <span style="font-size: 3rem;">🎉</span>
+            <h3>Your Story is Ready!</h3>
+            <p>Click below to download your personalized book:</p>
+            <a href="#" class="download-btn" id="downloadLink" target="_blank">
+                📖 Download Story PDF
+            </a>
+            <p style="margin-top: 20px; font-size: 14px;">
+                A copy has also been sent to your email!
+            </p>
         </div>
     </div>
 
     <script>
+        // Step navigation
+        function startCreating() {
+            document.getElementById('stepPayment').classList.add('hidden');
+            document.getElementById('stepCreate').classList.remove('hidden');
+        }
+        
         // Interest selection
         const interestBtns = document.querySelectorAll('.interest-btn');
         const selectedInterests = [];
@@ -199,17 +284,23 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    alert('Book created! Download link: ' + result.downloadUrl);
+                    // Show success with download link
+                    loading.style.display = 'none';
+                    document.getElementById('stepCreate').classList.add('hidden');
+                    document.getElementById('stepSuccess').style.display = 'block';
+                    document.getElementById('downloadLink').href = result.downloadUrl;
                 } else {
                     alert('Error: ' + result.error);
+                    submitBtn.disabled = false;
+                    form.style.display = 'block';
+                    loading.style.display = 'none';
                 }
             } catch (err) {
                 alert('Error generating book: ' + err.message);
+                submitBtn.disabled = false;
+                form.style.display = 'block';
+                loading.style.display = 'none';
             }
-            
-            submitBtn.disabled = false;
-            form.style.display = 'block';
-            loading.style.display = 'none';
         });
     </script>
 </body>

@@ -234,13 +234,24 @@ app.post('/api/generate', async (req, res) => {
     }
 });
 
-// Health check
-app.get('/api/health', (req, res) => {
-    res.json({ status: 'ok', mode: 'MVP' });
-});
+// Serve static files (frontend)
+app.use(express.static(path.join(__dirname)));
 
 // Serve output files
 app.use('/output', express.static(path.join(__dirname, 'output')));
+
+// Payment link - Replace with your actual Cash App or Stripe link
+const PAYMENT_LINK = 'https://cash.app/$AprilJetson'; // TODO: Update to your payment link
+
+// Health check
+app.get('/api/health', (req, res) => {
+    res.json({ status: 'ok', mode: 'MVP', paymentLink: PAYMENT_LINK });
+});
+
+// Get payment link
+app.get('/api/payment-link', (req, res) => {
+    res.json({ url: PAYMENT_LINK, price: '$12' });
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
